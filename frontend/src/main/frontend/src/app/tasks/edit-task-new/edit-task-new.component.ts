@@ -25,7 +25,7 @@ export class EditTaskNewComponent implements OnInit {
   lastOptionId = 0;
 
   @Input() task: Task = {
-    id: '',
+    id: null,
     question: '',
     category: '',
     options: [],

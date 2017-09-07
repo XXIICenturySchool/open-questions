@@ -26,7 +26,7 @@ const isCorrect = (answers: number[], index: number) => {
 export class TaskFormComponent implements OnInit {
   @Input() task: Task = createEmptyTask();
   @Output() onSubmit = new EventEmitter<Task>();
-  id = '';
+  id = null;
   question = '';
   category = '';
   answer = [];
@@ -60,6 +60,7 @@ export class TaskFormComponent implements OnInit {
         .map((correctnessWithIndex) => correctnessWithIndex.index),
       options: this.displayedOptions.map(option => option.value),
     };
+
     this.onSubmit.emit(task);
   }
 
