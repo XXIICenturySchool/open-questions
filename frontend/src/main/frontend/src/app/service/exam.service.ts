@@ -20,7 +20,7 @@ const unnormalizedConfigurationFromServerUnnormalizedExamData = (serverEntity: a
 
 const configurationWithTeacherId = (configuration: Configuration, teacherId: string): any => {
   return { ...configuration, ...{ teacherId: teacherId } };
-}
+};
 
 @Injectable()
 export class ExamService {

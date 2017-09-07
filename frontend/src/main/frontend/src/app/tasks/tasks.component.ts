@@ -4,6 +4,15 @@ import { Task } from '../data/task';
 import { TaskService } from '../service/task.service';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+const filterByCategory = (category) => (task: Task) => {
+  return task.category.toLowerCase().includes(category.toLowerCase());
+};
+
+const filterByQuestion = (question) => (task: Task) => {
+  return task.question.toLowerCase().includes(question.toLowerCase());
+};
+
+
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
@@ -19,6 +28,8 @@ export class TasksComponent implements OnInit {
   blockCreating = false;
   creating = false;
   closeResult: string;
+  categoryFilter = '';
+  questionFilter = '';
   public tasks: Task[] = [];
 
   constructor(private taskService: TaskService,
@@ -36,6 +47,12 @@ export class TasksComponent implements OnInit {
     this.editing = true;
     this.editingTask = task;
     return false;
+  }
+
+  displayedTasks() {
+    return this.tasks
+      .filter(filterByCategory(this.categoryFilter))
+      .filter(filterByQuestion(this.questionFilter))
   }
 
   createTask(content) {

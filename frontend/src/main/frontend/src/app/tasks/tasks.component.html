@@ -1,6 +1,8 @@
 <div class="tasks-component">
+  <input [(ngModel)]="categoryFilter" placeholder="category">
+  <input [(ngModel)]="questionFilter" placeholder="question">
   <div class="tasks-container">
-    <div class="task" *ngFor="let task of tasks">
+    <div class="task" *ngFor="let task of displayedTasks()">
       <div *ngIf="!(editing && (editingTask === task))"class="card" style="width: 30rem;">
         <div class="card-body">
           <app-task [task]="task"></app-task>
