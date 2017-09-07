@@ -1,0 +1,23 @@
+<button class="btn btn-success" (click)="createExam()">Add exam</button>
+<table class="table">
+  <thead class="thead-default">
+  <tr>
+    <th>Actions</th>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Type</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let exam of exams">
+      <td>
+        <div class="btn-group">
+          <button class="btn btn-link" (click)="handleViewClick(exam)">View</button>
+        </div>
+      </td>
+      <td>{{exam.globalExamId}}</td>
+      <td>{{exam.configuration.name}}</td>
+      <td>{{getExamType(exam)}}</td>
+    </tr>
+  </tbody>
+</table>

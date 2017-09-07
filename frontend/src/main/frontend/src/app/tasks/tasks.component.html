@@ -1,0 +1,28 @@
+<div class="tasks-component">
+  <div class="tasks-container">
+    <div class="task" *ngFor="let task of tasks">
+      <div *ngIf="!(editing && (editingTask === task))"class="card" style="width: 30rem;">
+        <div class="card-body">
+          <app-task [task]="task"></app-task>
+          <button *ngIf="hasAddAction" class="card-link btn btn-link" (click)="addTask(task)">Add</button>
+          <button  class="card-link btn btn-link" (click)="editTask(task)">Edit</button>
+          <!--<button  class="card-link btn btn-link" (click)="removeTask(task.id)">Remove</button>-->
+        </div>
+      </div>
+      <app-edit-task-new
+        *ngIf="editing && (editingTask === task)"
+        [task]="editingTask"
+        [blockActions]="blockEditing"
+        (onSave)="handleEditingSave($event)"
+        (onDismiss)="handleEditingDismiss()"
+      ></app-edit-task-new>
+    </div>
+    <button *ngIf="!creating" class="btn btn-success add-new-button" (click)="createTask()">Add new task</button>
+    <div class="task" *ngIf="creating">
+      <app-edit-task-new
+        [blockActions]="blockCreating"
+        (onSave)="handleCreatingSave($event)"
+        (onDismiss)="handleCreatingDismiss()"></app-edit-task-new>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div>
+  <div class="form-group">
+    <label for="examName">Name</label>
+    <input [(ngModel)]="name" name="name" type="email" class="form-control" id="examName" placeholder="Enter exam name">
+  </div>
+  <div class="form-check">
+    <label class="form-check-label">
+      <input [(ngModel)]="withTasks" type="checkbox" name="withTasks" class="form-check-input">
+      With tasks
+    </label>
+  </div>
+  <div *ngIf="withTasks" class="tasks-container">
+    <h4>Tasks</h4>
+    <div *ngFor="let task of tasks">
+      <span class="category text-muted" style="margin-left: 10px">{{task.category}}:</span>
+      <span class="question">{{task.question}}</span>
+      <button class="btn btn-danger" (click)="taskRemove(task)">Remove</button>
+    </div>
+    <button *ngIf="!addingTask" class="btn btn-link" (click)="addTask()">Add task</button>
+    <button *ngIf="addingTask" class="btn btn-link" (click)="dismissTaskAdding()">Dismiss</button>
+    <app-tasks *ngIf="addingTask" [hasAddAction]="true" (onAdd)="handleTaskSelected($event)"></app-tasks>
+  </div>
+  <div class="form-check">
+    <label class="form-check-label">
+      <input [(ngModel)]="withTemplates" type="checkbox" name="withTemplates" class="form-check-input">
+      With templates
+    </label>
+  </div>
+  <div *ngIf="withTemplates" class="tasks-container">
+    <h4>Templates</h4>
+    <div class="form-row" *ngFor="let template of templates" ngForTrackBy="id">
+      <div class="col">
+        <input type="text" [(ngModel)]="template.category" class="form-control" placeholder="category">
+      </div>
+      <div class="col">
+        <input type="number" [(ngModel)]="template.value" class="form-control" placeholder="count">
+      </div>
+      <div class="col">
+        <button class="btn btn-danger" (click)="removeTemplate(template)">Remove</button>
+      </div>
+    </div>
+    <button class="btn btn-link" (click)="addTemplate()">Add Template</button>
+  </div>
+  <button [disabled]="isSaveDisabled()" type="submit" class="btn btn-success" (click)="onCreate()">Create</button>
+</div>

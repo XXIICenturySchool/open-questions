@@ -1,0 +1,6 @@
+<div *ngIf="!saving">
+  <app-task-form *ngIf="task" [task]="task" (onSubmit)="onSubmit($event)"></app-task-form>
+</div>
+<div *ngIf="saving">Saving</div>
+
+<button (click)="goBack()">Back</button>

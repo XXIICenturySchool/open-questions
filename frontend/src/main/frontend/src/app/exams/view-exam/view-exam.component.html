@@ -1,0 +1,25 @@
+<button class="btn btn-link" (click)="goBack()">Back</button>
+<div *ngIf="!!exam" class="card">
+  <div class="card-body">
+    <h4 class="card-title">{{exam.configuration.name}}</h4>
+    <h6 class="card-subtitle mb-2 text-muted"><span>id </span>{{exam.globalExamId}}</h6>
+    <ul class="list-group list-group-flush">
+      <li *ngIf="exam.configuration.tasks && exam.configuration.tasks.length" class="list-group-item">
+        <h5 class="card-subtitle">Tasks</h5>
+        <ul>
+          <li *ngFor="let task of exam.configuration.tasks">
+            <a href="#"(click)="goToTask(task)">{{task.question}}</a>
+          </li>
+        </ul>
+      </li>
+      <li *ngIf="examContainerKeys.length" class="list-group-item">
+        <h5 class="card-subtitle">Templates</h5>
+        <ul>
+          <li *ngFor="let taskKey of examContainerKeys">
+            {{taskKey}}: {{exam.configuration.examContainer[taskKey]}}
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

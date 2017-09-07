@@ -1,0 +1,12 @@
+<h4 class="card-title question">{{task.question}}</h4>
+<h6 class="card-subtitle mb-2 text-muted category">{{task.category}}</h6>
+<ul class="card-body list-group list-group-flush">
+  <li
+    *ngFor="let option of task.options; let i = index"
+    class="list-group-item "
+    [class.option-correct]="isCorrect(i)"
+  >
+    {{option}}
+  </li>
+</ul>
+

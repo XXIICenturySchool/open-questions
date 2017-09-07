@@ -1,0 +1,12 @@
+<!--<form novalidate>-->
+  <div><label>Question</label><input [(ngModel)]="question" name="question" required></div>
+  <div><label>Category</label><input [(ngModel)]="category" name="category" required></div>
+  <div *ngFor="let option of displayedOptions; let i = index" ngForTrackBy="id">
+    <label>Option</label>
+    <input [(ngModel)]="option.value" name="{{'option' + i}}">
+    <label>isCorrect</label><input type="checkbox" [(ngModel)]="option.isCorrect">
+    <button (click)="removeOption(option.id)">Remove option</button>
+  </div>
+  <button (click)="addOption()">Add option</button>
+  <button (click)="onSubmitClicked()">Submit</button>
+<!--</form>-->

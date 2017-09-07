@@ -1,0 +1,17 @@
+.task {
+  margin: 20px;
+}
+
+.tasks-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.add-new-button {
+  margin: 20px;
+  position: relative;
+  display: block;
+  width: 30em;
+  height: 5em;
+}

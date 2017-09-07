@@ -1,0 +1,42 @@
+.option-correct {
+  background: lightgreen;
+}
+
+.list-group-item .option {
+  position: relative;
+  left: -2px;
+  flex: 1;
+  margin-right: 10px;
+
+}
+
+.option-container {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  height: 24px;
+  align-items: center;
+}
+
+.question input {
+  position: relative;
+  left: -2px;
+  font-weight: 600;
+  box-sizing: border-box;
+  height: 26px;
+}
+
+.category {
+  position: relative;
+  height: 17px;
+}
+
+.category input {
+  position: relative;
+  left: -2px;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+
