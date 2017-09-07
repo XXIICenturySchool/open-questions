@@ -43,8 +43,7 @@ public class OuterServiceImpl implements OuterService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String jsonExam = json;
-        HttpEntity<String> entity = new HttpEntity<>(jsonExam, headers);
+        HttpEntity<String> entity = new HttpEntity<>(json, headers);
         ResponseEntity<String> loginResponse = restTemplate.exchange(url.toString(), HttpMethod.POST, entity, String.class);
 
         String response ="no response";
@@ -54,7 +53,6 @@ public class OuterServiceImpl implements OuterService {
         } else if (loginResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             response = "bas response";
         }
-        System.out.println(response);
         return response;
     }
 }

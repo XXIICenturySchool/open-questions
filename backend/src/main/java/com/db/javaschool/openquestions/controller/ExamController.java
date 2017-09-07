@@ -17,7 +17,7 @@ public class ExamController {
 
     @GetMapping(path = "/api/getExam")
     public ExamData getExam(@RequestParam("id") String id, @RequestParam("teacher") String teacherId) {
-        return examService.getByGlobalExamId(id, teacherId);
+        return examService.get(id, teacherId);
     }
 
     @PostMapping(path = "/api/createExam")

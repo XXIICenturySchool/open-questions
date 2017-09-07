@@ -26,8 +26,8 @@ public class ExamServiceImpl implements ExamService {
     private OuterServiceImpl outerService;
 
     @Override
-    public ExamData get(String localExamId, String teacherId) {
-        List<TaskEntity> tasks = getTaskEntities(localExamId);
+    public ExamData get(String globalExamId, String teacherId) {
+        List<TaskEntity> tasks = getTaskEntities(globalExamId);
 
         List<TaskData> taskData = new ArrayList<>();
         for (TaskEntity task : tasks) {
@@ -51,8 +51,8 @@ public class ExamServiceImpl implements ExamService {
         return get(examEntity.getId(), teacherId);
     }
 
-    public List<TaskEntity> getTaskEntities(String localExamId) {
-        ExamEntity exam = examRepository.findOne(localExamId);
+    public List<TaskEntity> getTaskEntities(String globalExamId) {
+        ExamEntity exam = this.examRepository.findByGlobalExamId((String.valueOf(globalExamId)));
         ExamConfiguration configuration = exam.getConfiguration();
         List<TaskEntity> tasks = new ArrayList<>();
 
@@ -73,7 +73,6 @@ public class ExamServiceImpl implements ExamService {
                     TaskEntity taskEntity = category.get(random.nextInt(category.size()));
                     if (category.size()<integer) try {
                         throw new Exception("cannot create exam from this category because there is no enough questions for your exam configuration");
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
@@ -96,10 +95,11 @@ public class ExamServiceImpl implements ExamService {
                 .configuration(configuration)
                 .build();
         examRepository.insert(examEntity);
+        String returnedGlobalExamId = outerService.register(examEntity.getId(), configuration.getTeacherId());
         examEntity = ExamEntity.builder()
                 .configuration(examEntity.getConfiguration())
                 .id(examEntity.getId())
-                .globalExamId(outerService.register(examEntity.getId(), configuration.getTeacherId()))
+                .globalExamId(returnedGlobalExamId)
                 .build();
         examRepository.save(examEntity);
         return examEntity;
