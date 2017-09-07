@@ -6,6 +6,10 @@ import { TeacherService } from './teacher.service';
 import { Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
+import { Data, PagingState } from '../paging/paging';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+
 
 const unnormalizedConfigurationFromServerUnnormalizedExamData = (serverEntity: any): UnnormalizedExam => {
   return {
@@ -49,6 +53,21 @@ export class ExamService {
   getExams(): Promise<Exam[]> {
     return this.http.get('/api/exams').toPromise()
       .then(res => res.json()._embedded.exams);
+  }
+
+  fetchExams(pagingState: PagingState): Observable<Data<Exam>> {
+    return this.http.get('/api/exams', {
+      params: {
+        page: pagingState.currentPage() - 1,
+        size: pagingState.itemsPerPage(),
+      },
+    }).map(response => response.json())
+      .map((json: any): Data<Exam> => {
+        return {
+          totalCount: json.page.totalElements,
+          items: json._embedded.exams,
+        };
+      });
   }
 
 }

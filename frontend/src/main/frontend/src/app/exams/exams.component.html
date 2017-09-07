@@ -1,4 +1,7 @@
 <button class="btn btn-success" (click)="createExam()">Add exam</button>
+<button class="btn btn-success" (click)="pagingEngine.navigateToPage(pagingEngine.currentPage() - 1)">Prev</button>
+<div>{{pagingEngine.currentPage()}}</div>
+<button class="btn btn-success" (click)="pagingEngine.navigateToPage(pagingEngine.currentPage() + 1)">Next</button>
 <table class="table">
   <thead class="thead-default">
   <tr>
@@ -9,7 +12,7 @@
   </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let exam of exams">
+    <tr *ngFor="let exam of pagingEngine.items()">
       <td>
         <div class="btn-group">
           <button class="btn btn-link" (click)="handleViewClick(exam)">View</button>
