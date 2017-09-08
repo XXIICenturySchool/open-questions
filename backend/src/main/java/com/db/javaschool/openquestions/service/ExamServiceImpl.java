@@ -28,18 +28,15 @@ public class ExamServiceImpl implements ExamService {
     private OuterServiceImpl outerService;
 
     @Override
-    public ExamData get(String globalExamId, String teacherId) {
-        List<TaskEntity> tasks = getTaskEntities(globalExamId);
-
-        List<TaskData> taskData = new ArrayList<>();
-        for (TaskEntity task : tasks) {
-            taskData.add(TaskData.builder()
-                    .answer(task.getAnswer())
-                    .question(task.getQuestion())
-                    .options(task.getOptions())
-                    .pictureUrl(task.getPictureUrl())
-                    .build());
-        }
+    public ExamData get(String localExamId, String teacherId) {
+        List<TaskData> taskData = getTaskEntities(localExamId).stream()
+                .map(task -> TaskData.builder()
+                        .answer(task.getAnswer())
+                        .question(task.getQuestion())
+                        .options(task.getOptions())
+                        .pictureUrl(task.getPictureUrl())
+                        .build())
+                .collect(Collectors.toList());
 
         return ExamData.builder()
                 .tasks(taskData)
@@ -53,8 +50,8 @@ public class ExamServiceImpl implements ExamService {
         return get(examEntity.getId(), teacherId);
     }
 
-    public List<TaskEntity> getTaskEntities(String globalExamId) {
-        ExamEntity exam = this.examRepository.findByGlobalExamId((String.valueOf(globalExamId)));
+    public List<TaskEntity> getTaskEntities(String localExamId) {
+        ExamEntity exam = this.examRepository.findOne(localExamId);
         ExamConfiguration configuration = exam.getConfiguration();
 
         List<TaskEntity> tasks = Optional.of(configuration.getIds())
@@ -67,7 +64,7 @@ public class ExamServiceImpl implements ExamService {
 
         Optional.of(configuration.getExamContainer()).orElse(Collections.emptyMap())
                 .forEach((category, categoryCount) -> {
-                    List<String> ids = taskRepository.findIdsByCategory(category).stream()
+                    List<String> ids = taskRepository.findIdsByCategory(category.toLowerCase()).stream()
                             .map(TaskEntity::getId)
                             .filter(id -> tasks.stream().noneMatch(task -> task.getId().equals(id)))
                             .collect(Collectors.toList());

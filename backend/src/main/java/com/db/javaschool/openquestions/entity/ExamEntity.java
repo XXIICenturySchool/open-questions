@@ -13,7 +13,4 @@ public class ExamEntity {
     private String id;
     private String globalExamId;
     private ExamConfiguration configuration;
-//    @DBRef
-//    private List<TaskEntity> tasks;
-
 }

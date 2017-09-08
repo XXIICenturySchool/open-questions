@@ -25,12 +25,8 @@ public class NormalizeExamServiceImpl implements NormalizeExamService {
 
     @Override
     public NormalizedExamData get(String globalExamId) {
-        System.out.println(globalExamId);
         ExamEntity exam = examRepository.findByGlobalExamId(globalExamId);
-        System.out.println(exam);
         ExamConfiguration configuration = exam.getConfiguration();
-        System.out.println(configuration);
-        System.out.println(configuration.getIds());
         return NormalizedExamData.builder()
                 .globalExamId(globalExamId)
                 .tasks(Optional.of(configuration.getIds()).orElseGet(ArrayList::new).stream()
@@ -39,15 +35,5 @@ public class NormalizeExamServiceImpl implements NormalizeExamService {
                 .name(configuration.getName())
                 .examContainer(configuration.getExamContainer())
                 .build();
-
-/*        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        try {
-            String json = objectMapper.writeValueAsString(normalisedData);
-            System.out.println("json = " + json);
-            return objectMapper.readValue(json, NormalizedExamData.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 }

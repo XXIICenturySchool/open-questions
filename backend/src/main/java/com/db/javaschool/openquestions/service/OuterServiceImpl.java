@@ -29,13 +29,12 @@ public class OuterServiceImpl implements OuterService {
     @SneakyThrows
     public String register(String id, String teacher) {
 
-        String examUrl = "?id=" + id + "&teacher=" + teacher;
+        String examUrl = "/api/getExam?id=" + id + "&teacher=" + teacher;
         String json = "{\"teacherId\":\""+teacher+
                     "\",\"url\":\""+ examUrl +
                     "\",\"serviceName\":\""+serviceName+"\"}";
 
         ServiceInstance serviceInstance = Services.MAPLOGIN.pickRandomInstance(discoveryClient);
-        System.out.println("URI "+serviceInstance.getUri());
         URL url = serviceInstance.getUri().toURL();
         url = new URL(url.toString()+"/exams/saveExam");
         RestTemplate restTemplate = new RestTemplate();
