@@ -1,8 +1,8 @@
 package com.db.javaschool.openquestions.service;
 
-import com.db.javaschool.openquestions.data.ExamConfiguration;
 import com.db.javaschool.openquestions.dao.ExamRepository;
 import com.db.javaschool.openquestions.dao.TaskRepository;
+import com.db.javaschool.openquestions.data.ExamConfiguration;
 import com.db.javaschool.openquestions.data.ExamData;
 import com.db.javaschool.openquestions.data.TaskData;
 import com.db.javaschool.openquestions.entity.ExamEntity;
@@ -13,7 +13,9 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Builder
@@ -54,38 +56,31 @@ public class ExamServiceImpl implements ExamService {
     public List<TaskEntity> getTaskEntities(String globalExamId) {
         ExamEntity exam = this.examRepository.findByGlobalExamId((String.valueOf(globalExamId)));
         ExamConfiguration configuration = exam.getConfiguration();
-        List<TaskEntity> tasks = new ArrayList<>();
 
-        if (configuration.getIds() != null) {
-            for (String id : configuration.getIds()) {
-                TaskEntity task = taskRepository.findOne(id);
-                if (task != null)
-                    tasks.add(task);
-            }
-        }
+        List<TaskEntity> tasks = Optional.of(configuration.getIds())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(taskRepository::findOne)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
-        if (configuration.getExamContainer() != null) {
-            Random random = new Random();
-            Map<String, Integer> map = new HashMap<>();
-            configuration.getExamContainer().forEach(((s, integer) -> {
-                List<TaskEntity> category = taskRepository.findByCategory(s);
-                for (int i = 0; i < integer; i++) {
-                    TaskEntity taskEntity = category.get(random.nextInt(category.size()));
-                    if (category.size()<integer) try {
-                        throw new Exception("cannot create exam from this category because there is no enough questions for your exam configuration");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        break;
-                    }
-                    while (!tasks.contains(taskEntity)) {
-                        taskEntity = category.get(random.nextInt(category.size()));
-                            break;
-                    }
-                    tasks.add(taskEntity);
-                }
-            }));
-        }
+
+        Optional.of(configuration.getExamContainer()).orElse(Collections.emptyMap())
+                .forEach((category, categoryCount) -> {
+                    List<String> ids = taskRepository.findIdsByCategory(category).stream()
+                            .map(TaskEntity::getId)
+                            .filter(id -> tasks.stream().noneMatch(task -> task.getId().equals(id)))
+                            .collect(Collectors.toList());
+
+                    Collections.shuffle(ids);
+                    tasks.addAll(ids.stream()
+                            .limit(categoryCount)
+                            .map(taskRepository::findOne)
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList())
+                    );
+                });
+
         return tasks;
     }
 
@@ -95,7 +90,15 @@ public class ExamServiceImpl implements ExamService {
                 .configuration(configuration)
                 .build();
         examRepository.insert(examEntity);
-        String returnedGlobalExamId = outerService.register(examEntity.getId(), configuration.getTeacherId());
+
+        String returnedGlobalExamId = null;
+        try {
+            returnedGlobalExamId = outerService.register(examEntity.getId(), configuration.getTeacherId());
+        } catch (Exception e) {
+            examRepository.delete(examEntity.getId());
+            throw e;
+        }
+
         examEntity = ExamEntity.builder()
                 .configuration(examEntity.getConfiguration())
                 .id(examEntity.getId())
