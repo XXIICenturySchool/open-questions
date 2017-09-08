@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+
+import _ from 'lodash';
+
 import { ExamService } from '../../service/exam.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UnnormalizedExam } from '../../data/exam';
@@ -24,14 +27,8 @@ export class ViewExamComponent implements OnInit {
       .switchMap((params: ParamMap) => this.examService.getExam(params.get('id')))
       .subscribe(exam => {
         this.exam = exam;
-        if (this.exam.configuration.examContainer) {
-          for (const key in this.exam.configuration.examContainer) {
-            if (this.exam.configuration.examContainer.hasOwnProperty(key)) {
-              this.examContainerKeys.push(key);
-            }
-          }
-        }
-        console.log(exam);
+        const examContainer = this.exam.configuration.examContainer && {};
+        this.examContainerKeys = _.keys(examContainer);
       });
   }
 

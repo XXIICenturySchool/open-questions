@@ -53,8 +53,8 @@ export class CreateExamComponent implements OnInit {
 
   handleTaskSelected(task) {
     this.addingTask = false;
-    const existingTask = this.tasks.find(t => t.id === task.id);
-    if (existingTask) {
+    const taskAlreadyAdded = !!this.tasks.find(t => t.id === task.id);
+    if (taskAlreadyAdded) {
       return false;
     }
     this.tasks.push(task);
