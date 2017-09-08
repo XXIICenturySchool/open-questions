@@ -14,7 +14,7 @@ public enum Services {
     LOGIN("maplogin"),
     MATH("mathservice"),
     TELEGRAM("telegram"),
-    AMERICAN_QUESTIONS("americanQuestions");
+    AMERICAN_QUESTIONS("american-questions");
 
     public final String id;
 
