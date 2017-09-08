@@ -59,22 +59,6 @@ export class TasksComponent implements OnInit {
     this.creating = true;
   }
 
-  removeTask(id: string) {
-    this.taskService.removeTask(id);
-    this.tasks = this.tasks.filter(task => task.id !== id);
-    return false;
-  }
-
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
-  }
 
   handleCreatingDismiss() {
     this.creating = false;

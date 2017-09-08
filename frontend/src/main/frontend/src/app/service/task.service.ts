@@ -41,12 +41,4 @@ export class TaskService {
         return serverTaskEntityToTask(json);
       });
   }
-  removeTask(id: string): Promise<any> {
-    const oldLength = this.tasks.length;
-    this.tasks = this.tasks.filter(task => task.id !== id);
-    if (this.tasks.length === oldLength) {
-      return Promise.reject('no task found to delete');
-    }
-    return Promise.resolve('success');
-  }
 }
