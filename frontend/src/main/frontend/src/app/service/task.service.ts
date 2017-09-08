@@ -22,6 +22,7 @@ export class TaskService {
   constructor(private http: Http) { }
 
   saveTask(taskToSave: Task): Promise<Task> {
+    taskToSave.category = taskToSave.category.toLowerCase();
     return this.http.post('/api/tasks', taskToSave).toPromise()
       .then(response => response.json());
   }
